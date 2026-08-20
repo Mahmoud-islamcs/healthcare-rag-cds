@@ -85,7 +85,7 @@ class UnifiedLLM:
 
     def _generate_groq_with_retry(self, system_prompt: str, user_prompt: str) -> str:
         models_to_try = [self.model_id]
-        fallback_candidates = ["qwen/qwen3.6-27b", "openai/gpt-oss-20b", "openai/gpt-oss-120b"]
+        fallback_candidates = ["llama-3.3-70b-versatile", "llama-3.1-8b-instant", "mixtral-8x7b-32768", "gemma2-9b-it"]
         for fb in fallback_candidates:
             if fb not in models_to_try:
                 models_to_try.append(fb)

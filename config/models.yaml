@@ -1,10 +1,10 @@
 llm:
   provider: "groq"
-  model_id: "qwen/qwen3.6-27b"
-  # Other high-performance models available on your Groq key:
-  # - "openai/gpt-oss-120b"
-  # - "openai/gpt-oss-20b"
-  # - "allam-2-7b"
+  model_id: "llama-3.3-70b-versatile"
+  # Other high-performance models available on Groq:
+  # - "llama-3.1-8b-instant"
+  # - "mixtral-8x7b-32768"
+  # - "gemma2-9b-it"
   local_model_id: "microsoft/Phi-3.5-mini-instruct"
   temperature: 0.1
   max_new_tokens: 4096

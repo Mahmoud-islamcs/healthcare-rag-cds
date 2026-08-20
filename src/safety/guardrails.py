@@ -16,13 +16,13 @@ class MedicalSafetyGuardrails:
     ]
 
     CONVERSATIONAL_KEYWORDS = [
-        r'^(hi|hello|hey|howdy|good\s+(morning|afternoon|evening|day)|greetings)\b',
-        r'^(how\s+are\s+you|how\s+is\s+it\s+going|what(\x27s|\s+is)\s+up|how\s+do\s+you\s+do)\b',
-        r'^(who\s+are\s+you|what\s+can\s+you\s+do|what\s+is\s+your\s+name|what\s+are\s+you)\b',
-        r'^(thanks|thank\s+you|thx|much\s+appreciated|bye|goodbye|see\s+you)\b',
-        r'^(مرحبا|أهلا|اهلا|هاي|ازيك|ازي\s+حضرتك|عامل\s+ايه|كيف\s+حالك|كيفك|صباح\s+الخير|مساء\s+الخير|السلام\s+عليكم|سلام|تحياتي)\b',
-        r'^(من\s+أنت|من\s+انت|ماذا\s+تستطيع\s+أن\s+تفعل|ما\s+هي\s+قدراتك|عرف\s+نفسك|مين\s+انت)\b',
-        r'^(شكرا|شكرًا|تسلم|يعطيك\s+العافية|جزاك\s+الله\s+خيرا|مع\s+السلامة|باي)\b'
+        r'^(hi|hello|hey|howdy|good\s+(morning|afternoon|evening|day)|greetings)(\b|\s|$)',
+        r'^(how\s+are\s+you|how\s+is\s+it\s+going|what(\x27s|\s+is)\s+up|how\s+do\s+you\s+do)(\b|\s|$)',
+        r'^(who\s+are\s+you|what\s+can\s+you\s+do|what\s+is\s+your\s+name|what\s+are\s+you)(\b|\s|$)',
+        r'^(thanks|thank\s+you|thx|much\s+appreciated|bye|goodbye|see\s+you)(\b|\s|$)',
+        r'^(مرحبا|أهلا|اهلا|هاي|ازيك|ازي\s*حضرتك|عامل\s*ايه|عامل\s*ايه\s*يا|كيف\s*حالك|كيفك|شخبارك|صباح\s*الخير|مساء\s*الخير|السلام\s*عليكم|سلام|تحياتي)(\b|\s|$)',
+        r'^(من\s*أنت|من\s*انت|ماذا\s*تستطيع\s*أن\s*تفعل|ما\s*هي\s*قدراتك|عرف\s*نفسك|مين\s*انت)(\b|\s|$)',
+        r'^(شكرا|شكرًا|تسلم|يعطيك\s*العافية|جزاك\s*الله\s*خيرا|مع\s*السلامة|باي)(\b|\s|$)'
     ]
 
     @classmethod
@@ -30,11 +30,14 @@ class MedicalSafetyGuardrails:
         if not query or not query.strip():
             return False, None
         cleaned_query = query.strip().lower()
-        # Clean punctuation
-        cleaned_query = re.sub(r'[?!.,;:\-_]', '', cleaned_query).strip()
+        # Clean punctuation and normalize Arabic
+        cleaned_query = re.sub(r'[?!.,;:\-_؟،]', '', cleaned_query).strip()
+        norm_query = re.sub(r'[إأآ]', 'ا', cleaned_query)
+        norm_query = re.sub(r'ة', 'ه', norm_query)
+        norm_query = re.sub(r'ى', 'ي', norm_query)
         
         for pattern in cls.CONVERSATIONAL_KEYWORDS:
-            if re.search(pattern, cleaned_query):
+            if re.search(pattern, cleaned_query) or re.search(pattern, norm_query):
                 is_arabic = bool(re.search(r'[\u0600-\u06FF]', query))
                 if is_arabic:
                     return True, (
