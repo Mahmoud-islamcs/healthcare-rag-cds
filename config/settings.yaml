@@ -1,0 +1,31 @@
+app:
+  name: "BioGuard Medical RAG"
+  version: "2.0.0"
+  log_level: "INFO"
+
+paths:
+  raw_data_dir: "data/raw"
+  processed_dir: "data/processed"
+  index_dir: "data/processed/index"
+  eval_dir: "data/evaluation"
+
+chunking:
+  strategy: "medical_structure_aware"
+  chunk_size: 700
+  chunk_overlap: 120
+  min_chunk_size: 100
+
+retrieval:
+  dense_weight: 0.60
+  bm25_weight: 0.40
+  dense_top_k: 25
+  bm25_top_k: 25
+  rerank_top_k: 6
+  min_relevance_threshold: 0.35
+
+safety:
+  enable_guardrails: true
+  emergency_detection: true
+  confidence_threshold: 0.35
+  require_grounding: true
+  disclaimer: "DISCLAIMER: This system provides informational medical reference only based on provided documents and does not replace professional medical judgment, diagnosis, or treatment."
