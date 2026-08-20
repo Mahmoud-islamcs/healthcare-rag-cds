@@ -30,9 +30,17 @@ class UnifiedLLM:
             from groq import Groq
             api_key = os.getenv("GROQ_API_KEY")
             if not api_key:
+                try:
+                    import streamlit as st
+                    if hasattr(st, "secrets") and "GROQ_API_KEY" in st.secrets:
+                        api_key = st.secrets["GROQ_API_KEY"]
+                except Exception:
+                    pass
+
+            if not api_key:
                 raise ValueError(
                     "GROQ_API_KEY environment variable is not set. "
-                    "Please configure your GROQ_API_KEY in the .env file."
+                    "Please configure your GROQ_API_KEY in .env or Streamlit Secrets."
                 )
             self.client = Groq(api_key=api_key)
             logger.info(f"Initialized Groq LLM client with model: {self.model_id}")

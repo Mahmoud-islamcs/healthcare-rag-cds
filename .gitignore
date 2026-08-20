@@ -25,6 +25,8 @@ models/*
 !models/.gitkeep
 data/processed/*
 !data/processed/.gitkeep
+!data/processed/index/
+!data/processed/index/*
 
 # System & OS files
 .DS_Store
